@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Window Wise</title>
+<meta name="theme-color" content="#1E2A5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Windows">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E2A5A'/%3E%3Crect x='16' y='12' width='32' height='40' rx='3' fill='none' stroke='%23FFD27A' stroke-width='4'/%3E%3Cpath d='M16 32h32M32 12v40' stroke='%23FFD27A' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231E2A5A'/%3E%3Crect x='16' y='12' width='32' height='40' rx='3' fill='none' stroke='%23FFD27A' stroke-width='4'/%3E%3Cpath d='M16 32h32M32 12v40' stroke='%23FFD27A' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF6EE; --card:#FFFFFF; --ink:#1F2A44; --muted:#6B7390; --line:#ECE4D6;
+  --night1:#1E2A5A; --night2:#3D4F93; --moon:#FFD27A; --rain:#4C8DF6;
+  --open:#2FB67C; --bit:#F2B632; --lot:#F07F3C; --shut:#E5484D;
+  --shadow:0 6px 20px rgba(31,42,68,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#11152A; --card:#1B2140; --ink:#EEF0FA; --muted:#9CA3C4; --line:#2A3158; --shadow:0 6px 20px rgba(0,0,0,.35); }
+}
+:root[data-theme="dark"]{ --bg:#11152A; --card:#1B2140; --ink:#EEF0FA; --muted:#9CA3C4; --line:#2A3158; --shadow:0 6px 20px rgba(0,0,0,.35); }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px calc(32px + env(safe-area-inset-bottom))}
+h1,h2,h3,.big{font-family:Fredoka,Nunito,sans-serif;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:20px 20px 22px;color:#fff;
+  background:linear-gradient(160deg,var(--night1),var(--night2));box-shadow:var(--shadow)}
+.hero .top{display:flex;justify-content:space-between;align-items:center}
+.hero .date{font-size:13px;opacity:.75;font-weight:700;letter-spacing:.02em}
+.hero h1{font-size:28px;font-weight:700;margin-top:6px}
+.hero p{margin:8px 0 0;font-size:15px;line-height:1.4;opacity:.92;max-width:34ch}
+.gear{background:rgba(255,255,255,.14);border:0;width:38px;height:38px;border-radius:12px;display:grid;place-items:center}
+.gear svg{width:20px;height:20px}
+.stars{position:absolute;inset:0;pointer-events:none;opacity:.6}
+.moon{position:absolute;right:-18px;bottom:-26px;width:110px;height:110px;opacity:.18}
+.banner{margin-top:10px;background:#FFF2CC;color:#7A5B00;border-radius:14px;padding:10px 12px;font-size:13px;font-weight:700;display:none}
+
+/* window cards */
+.beds{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.bed{background:var(--card);border-radius:22px;padding:14px 12px 14px;box-shadow:var(--shadow);text-align:center;position:relative}
+.bed .name{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.bed .face{font-size:11px;color:var(--muted);font-weight:700}
+.bed svg.win{width:100%;max-width:160px;height:auto;margin:6px auto 2px;display:block}
+.pill{display:inline-block;border-radius:999px;padding:7px 12px;color:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;line-height:1.1}
+.bed .why{font-size:12.5px;line-height:1.35;color:var(--muted);margin-top:8px;min-height:3em}
+.sash{transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.tile{background:var(--card);border-radius:18px;padding:10px 4px;text-align:center;box-shadow:var(--shadow)}
+.tile svg{width:34px;height:34px;display:block;margin:0 auto 4px}
+.tile b{display:block;font-size:14px;font-family:Fredoka,sans-serif;font-weight:600}
+.tile span{display:block;font-size:11px;color:var(--muted);font-weight:700;line-height:1.25}
+.change{margin-top:10px;background:var(--card);border-radius:16px;padding:10px 14px;font-size:14px;font-weight:700;box-shadow:var(--shadow);display:none;align-items:center;gap:8px}
+.change svg{width:22px;height:22px;flex:none}
+
+/* chart */
+.card{background:var(--card);border-radius:22px;padding:16px;margin-top:14px;box-shadow:var(--shadow)}
+.card h2{font-size:18px;font-weight:600}
+.card .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+#chart svg{width:100%;height:auto;display:block;margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--muted);font-weight:700;margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+
+/* tomorrow */
+.tmrw{display:flex;gap:14px;align-items:center}
+.tmrw svg{width:62px;height:62px;flex:none}
+.tmrw .t{font-size:30px;font-family:Fredoka,sans-serif;font-weight:600;line-height:1}
+.tmrw .t small{font-size:15px;color:var(--muted);font-weight:500}
+.tmrw p{margin:4px 0 0;font-size:14px;line-height:1.4}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}
+.foot a{color:inherit}
+
+/* settings */
+dialog{border:0;border-radius:24px;padding:0;width:min(520px,calc(100% - 20px));max-height:calc(100% - 30px);background:var(--bg);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(17,21,42,.55)}
+.sheet{padding:18px 16px 20px}
+.sheet header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sheet h2{font-size:22px}
+.x{background:var(--card);border:0;width:34px;height:34px;border-radius:10px;font-size:18px}
+fieldset{border:0;background:var(--card);border-radius:18px;padding:12px 14px;margin:0 0 12px}
+legend{font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;padding:0;float:left;width:100%;margin-bottom:4px}
+fieldset>*:not(legend){clear:both}
+label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin:8px 0 4px;clear:both}
+input,select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--bg);border-radius:12px;padding:4px;border:1.5px solid var(--line)}
+.seg button{border:0;background:transparent;padding:8px 2px;border-radius:9px;font-weight:800;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg2{grid-template-columns:1fr 1fr}
+.inl{display:flex;gap:8px;align-items:end}
+.inl input{flex:1;min-width:0}
+.mini{border:0;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px;font-weight:800;font-size:13px;white-space:nowrap}
+.mini.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.save{width:100%;border:0;border-radius:16px;padding:14px;background:var(--open);color:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.note{font-size:12px;color:var(--muted);line-height:1.45;margin:8px 0 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:800;font-size:14px;transition:transform .3s,visibility .3s;z-index:9;visibility:hidden}
+.toast.on{transform:translateX(-50%) translateY(0);visibility:visible}
+@media (max-width:360px){ .tiles{grid-template-columns:repeat(2,1fr)} }
+@media (prefers-reduced-motion: reduce){ .sash{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <svg class="stars" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="#fff"><circle cx="40" cy="30" r="1.4"/><circle cx="120" cy="60" r="1"/><circle cx="210" cy="22" r="1.6"/><circle cx="300" cy="50" r="1.1"/><circle cx="360" cy="18" r="1.3"/><circle cx="260" cy="95" r="1"/><circle cx="80" cy="110" r="1.2"/><circle cx="170" cy="140" r="1"/></g>
+    </svg>
+    <svg class="moon" viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6a18 18 0 1 0 12 30A15 15 0 0 1 30 6z" fill="#FFD27A"/></svg>
+    <div class="top">
+      <div class="date" id="date">Womerah Lane</div>
+      <button class="gear" id="openSettings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.9 1.9M17.5 17.5l1.9 1.9M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.9-1.9M17.5 6.5l1.9-1.9"/></svg>
+      </button>
+    </div>
+    <h1>Tonight's windows</h1>
+    <p id="headline">Asking the sky…</p>
+  </section>
+  <div class="banner" id="banner"></div>
+
+  <section class="beds">
+    <div class="bed" id="bed-north"></div>
+    <div class="bed" id="bed-south"></div>
+  </section>
+
+  <section class="tiles" id="tiles"></section>
+  <div class="change" id="change"></div>
+
+  <section class="card">
+    <h2>Wind through the night</h2>
+    <div class="sub">Higher arrow = stronger wind. Arrows point where it's blowing.</div>
+    <div id="chart"></div>
+    <div class="legend">
+      <span><i style="background:#7ED3A1"></i>&lt;10</span><span><i style="background:#F6D55C"></i>10–20</span><span><i style="background:#F2A541"></i>20–30</span><span><i style="background:#ED6A5A"></i>30–40</span><span><i style="background:#B5179E"></i>40+ km/h</span><span><i style="background:var(--rain)"></i>rain</span>
+    </div>
+  </section>
+
+  <section class="card" id="tomorrow"></section>
+
+  <div class="foot" id="foot">Forecast: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (BOM + global models)</div>
+</div>
+
+<dialog id="settings">
+  <form class="sheet" method="dialog" id="settingsForm">
+    <header><h2>Settings</h2><button class="x" value="close" aria-label="Close">×</button></header>
+    <div id="settingsBody"></div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { HOME, DEFAULT_FACING, LEVELS, fetchForecast, sampleForecast, buildAdvice, headline, compass16, codeInfo, shortHour, niceDate, sydneyNow } from './advice.js';
+
+const $ = s => document.querySelector(s);
+const LS = 'windowwise.v1';
+const store = {
+  get(){ try { return JSON.parse(localStorage.getItem(LS)) || {}; } catch { return {}; } },
+  set(v){ try { localStorage.setItem(LS, JSON.stringify(v)); } catch {} },
+};
+
+let local = store.get();
+let server = { caps: { kv:false, email:false }, settings: null, online: false };
+let facing = { ...DEFAULT_FACING, ...(local.facing || {}) };
+let data = null;
+
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2400); }
+
+// ---------- icons ----------
+const ICON = {
+  moon:'<path d="M28 8a15 15 0 1 0 12 24A12 12 0 0 1 28 8z" fill="#FFD27A"/>',
+  sun:'<circle cx="24" cy="24" r="8" fill="#FFC23D"/><g stroke="#FFC23D" stroke-width="3" stroke-linecap="round"><path d="M24 6v5M24 37v5M6 24h5M37 24h5M11 11l3.5 3.5M33.5 33.5L37 37M11 37l3.5-3.5M33.5 14.5L37 11"/></g>',
+  cloud:'<path d="M15 37h19a8 8 0 0 0 1-15.9A11 11 0 0 0 14.5 19 9 9 0 0 0 15 37z" fill="#B9C3DE"/>',
+  partlyNight:'<path d="M30 5a10 10 0 1 0 9 15A8 8 0 0 1 30 5z" fill="#FFD27A"/><path d="M13 40h18a7 7 0 0 0 1-13.9A10 10 0 0 0 13 24a8 8 0 0 0 0 16z" fill="#B9C3DE"/>',
+  partlyDay:'<circle cx="31" cy="15" r="7" fill="#FFC23D"/><g stroke="#FFC23D" stroke-width="2.5" stroke-linecap="round"><path d="M31 3v3M43 15h-3M39.5 6.5l-2 2"/></g><path d="M13 40h18a7 7 0 0 0 1-13.9A10 10 0 0 0 13 24a8 8 0 0 0 0 16z" fill="#C7D0E6"/>',
+  rain:'<path d="M15 31h19a8 8 0 0 0 1-15.9A11 11 0 0 0 14.5 13 9 9 0 0 0 15 31z" fill="#9AA8CC"/><g stroke="#4C8DF6" stroke-width="3" stroke-linecap="round"><path d="M17 35l-2 6M25 35l-2 6M33 35l-2 6"/></g>',
+  drizzle:'<path d="M15 31h19a8 8 0 0 0 1-15.9A11 11 0 0 0 14.5 13 9 9 0 0 0 15 31z" fill="#AEB9D6"/><g fill="#4C8DF6"><circle cx="17" cy="38" r="1.8"/><circle cx="25" cy="41" r="1.8"/><circle cx="33" cy="38" r="1.8"/></g>',
+  storm:'<path d="M15 30h19a8 8 0 0 0 1-15.9A11 11 0 0 0 14.5 12 9 9 0 0 0 15 30z" fill="#7F8BB0"/><path d="M26 28l-7 10h6l-2 8 9-12h-6l3-6z" fill="#FFC23D"/>',
+  fog:'<g stroke="#B9C3DE" stroke-width="3.5" stroke-linecap="round"><path d="M8 18h32M12 25h28M8 32h26M14 39h20"/></g>',
+  drop:'<path d="M24 6c7 10 12 16 12 23a12 12 0 0 1-24 0c0-7 5-13 12-23z" fill="#4C8DF6"/><path d="M18 30a6 6 0 0 0 5 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7"/>',
+  thermo:'<rect x="19" y="6" width="10" height="26" rx="5" fill="none" stroke="#F07F3C" stroke-width="3"/><circle cx="24" cy="36" r="7" fill="#F07F3C"/><path d="M24 18v16" stroke="#F07F3C" stroke-width="4" stroke-linecap="round"/>',
+  change:'<path d="M6 16h24a6 6 0 1 0-6-6" fill="none" stroke="#4C8DF6" stroke-width="3.5" stroke-linecap="round"/><path d="M6 26h32a6 6 0 1 1-6 6" fill="none" stroke="#4C8DF6" stroke-width="3.5" stroke-linecap="round"/><path d="M6 36h14" stroke="#4C8DF6" stroke-width="3.5" stroke-linecap="round"/>',
+};
+const icon = name => `<svg viewBox="0 0 48 48" aria-hidden="true">${ICON[name] || ICON.cloud}</svg>`;
+function windIcon(deg){ // arrow showing where the wind blows to
+  return `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--line)" stroke-width="2.5"/><text x="24" y="10" text-anchor="middle" font-size="7" font-weight="800" fill="var(--muted)">N</text><g transform="rotate(${deg + 180} 24 24)"><path d="M24 9l8 18-8-5-8 5z" fill="#4C8DF6"/><path d="M24 22v15" stroke="#4C8DF6" stroke-width="3.5" stroke-linecap="round"/></g></svg>`;
+}
+
+// ---------- the folding window (top-down view, like the sketch) ----------
+// 5 bifold panels hinged off the left jamb. Fold angle t for the whole stack,
+// or a = just the last panel left ajar.
+const FOLD = [ { t: 74, a: 0 }, { t: 40, a: 0 }, { t: 0, a: 48 }, { t: 0, a: 0 } ];
+const TRACK = { x0: 16, x1: 144, y: 64 };
+function foldPoints(t, a){
+  const L = (TRACK.x1 - TRACK.x0) / 5, r = Math.PI / 180;
+  let x = TRACK.x0, y = TRACK.y; const pts = [[x, y]];
+  for (let i = 0; i < 5; i++) {
+    const ang = i < 4 ? t : Math.max(t, a);
+    x += L * Math.cos(ang * r);
+    y += (i % 2 === 0 ? -1 : 1) * L * Math.sin(ang * r);
+    pts.push([x, y]);
+  }
+  return pts;
+}
+function windowSVG(level, color, windHits, uid, t = FOLD[level].t, a = FOLD[level].a){
+  const pts = foldPoints(t, a);
+  const end = pts[pts.length - 1];
+  const gap = TRACK.x1 - end[0];
+  const mid = (end[0] + TRACK.x1) / 2;
+  const lock = level === 3 ? `<g transform="translate(80 50)"><rect x="-8" y="-3" width="16" height="12" rx="3" fill="${color}"/><path d="M-4.5 -3v-3.5a4.5 4.5 0 0 1 9 0V-3" fill="none" stroke="${color}" stroke-width="2.6"/></g>` : '';
+  const air = gap > 5 ? `<g stroke="${windHits ? color : '#9AA8CC'}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M${mid} 90 C ${mid - 6} 78, ${mid + 6} 66, ${mid} ${Math.max(18, 54 - gap * 0.3)}"/>
+      <path d="M${mid - 4} ${Math.max(18, 54 - gap * 0.3) + 5} l4 -5 l4 5"/></g>` : '';
+  return `<svg class="win" viewBox="0 0 160 100" role="img" aria-label="${LEVELS[level].label}">
+    <defs><linearGradient id="g${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D4F93"/><stop offset="1" stop-color="#1E2A5A"/></linearGradient></defs>
+    <rect x="4" y="70" width="152" height="27" rx="9" fill="url(#g${uid})"/>
+    <text x="8" y="12" font-size="7.5" font-weight="800" fill="var(--muted)" letter-spacing=".08em">BEDROOM</text>
+    <text x="12" y="87" font-size="7.5" font-weight="800" fill="#fff" opacity=".7" letter-spacing=".08em">OUTSIDE</text>
+    <line x1="${TRACK.x0}" y1="${TRACK.y}" x2="${TRACK.x1}" y2="${TRACK.y}" stroke="var(--line)" stroke-width="2.5"/>
+    ${gap > 2 ? `<line x1="${end[0] + 2}" y1="${TRACK.y}" x2="${TRACK.x1 - 1}" y2="${TRACK.y}" stroke="${color}" stroke-width="3" stroke-dasharray="3 3"/>` : ''}
+    ${air}
+    <rect x="8" y="58" width="9" height="12" rx="2" fill="var(--ink)"/>
+    <rect x="143" y="58" width="9" height="12" rx="2" fill="var(--ink)"/>
+    <polyline points="${pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.slice(1, -1).map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.2" fill="var(--card)" stroke="var(--ink)" stroke-width="1.4"/>`).join('')}
+    <circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="3.6" fill="${color}" stroke="var(--ink)" stroke-width="1.4"/>
+    ${lock}
+  </svg>`;
+}
+
+const foldState = {};
+function animateFold(holder, level, color, hits, uid){
+  const to = FOLD[level], from = foldState[uid] || { t: 0, a: 0 };
+  foldState[uid] = to;
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || (from.t === to.t && from.a === to.a)) { holder.innerHTML = windowSVG(level, color, hits, uid); return; }
+  const t0 = performance.now(), dur = 900;
+  const ease = x => 1 - Math.pow(1 - x, 3);
+  (function frame(now){
+    const k = ease(Math.min(1, (now - t0) / dur));
+    holder.innerHTML = windowSVG(level, color, hits, uid, from.t + (to.t - from.t) * k, from.a + (to.a - from.a) * k);
+    if (k < 1) requestAnimationFrame(frame);
+  })(t0);
+}
+
+function renderBed(id, title, face, deg, uid){
+  const lvl = face.level;
+  const hits = face.perHour.some(p => p.on > 8);
+  $(id).innerHTML = `
+    <div class="name">${title}</div>
+    <div class="face">faces ${compass16(deg)} · ${Math.round(deg)}°</div>
+    <div class="winbox"></div>
+    <span class="pill" style="background:${face.color}">${face.label}</span>
+    <div class="why">${face.reason}</div>`;
+  animateFold($(id + ' .winbox'), lvl, face.color, hits, uid);
+}
+
+// ---------- Seabreeze-style chart ----------
+const speedColor = v => v < 10 ? '#7ED3A1' : v < 20 ? '#F6D55C' : v < 30 ? '#F2A541' : v < 40 ? '#ED6A5A' : '#B5179E';
+function chartSVG(adv){
+  const hs = adv.hours, n = hs.length;
+  const W = 360, H = 230, L = 30, R = 12, T = 18, chartB = 150;
+  const top = Math.max(30, ...hs.map(h => h.gust)) + 5;
+  const maxV = Math.ceil(top / 10) * 10;
+  const x = i => L + i * (W - L - R) / (n - 1);
+  const y = v => T + (1 - v / maxV) * (chartB - T);
+  let g = '';
+  for (let v = 0; v <= maxV; v += 10) {
+    g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>
+          <text x="${L - 6}" y="${y(v) + 3.5}" text-anchor="end" font-size="9.5" fill="var(--muted)" font-weight="700">${v}</text>`;
+  }
+  const line = hs.map((h, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(h.wind).toFixed(1)}`).join(' ');
+  const area = `${line} L${x(n - 1)} ${y(0)} L${x(0)} ${y(0)} Z`;
+  const gust = hs.map((h, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(h.gust).toFixed(1)}`).join(' ');
+  const arrows = hs.map((h, i) => `
+    <g transform="translate(${x(i).toFixed(1)} ${y(h.wind).toFixed(1)}) rotate(${(h.dir + 180) % 360})">
+      <circle r="12.5" fill="var(--card)" opacity=".85"/>
+      <path d="M0 -12 L7 -1 L2.2 -1 L2.2 11 L-2.2 11 L-2.2 -1 L-7 -1 Z" fill="${speedColor(h.wind)}" stroke="var(--ink)" stroke-width="1.2" stroke-linejoin="round"/>
+    </g>`).join('');
+  // which bed is copping it
+  const hit = hs.map((h, i) => {
+    const nOn = adv.north.perHour[i].on, sOn = adv.south.perHour[i].on;
+    const who = nOn > 8 ? 'N' : sOn > 8 ? 'S' : '';
+    const lvl = who === 'N' ? adv.north.perHour[i].lvl : who === 'S' ? adv.south.perHour[i].lvl : 0;
+    return who ? `<g transform="translate(${x(i)} 166)"><rect x="-9" y="-8" width="18" height="16" rx="5" fill="${LEVELS[lvl].color}"/><text y="4" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">${who}</text></g>` : '';
+  }).join('');
+  const maxRain = Math.max(2, ...hs.map(h => h.rain));
+  const rain = hs.map((h, i) => {
+    if (h.rain < 0.05) return '';
+    const bh = Math.max(2, h.rain / maxRain * 26);
+    return `<rect x="${x(i) - 7}" y="${206 - bh}" width="14" height="${bh}" rx="3" fill="#4C8DF6" opacity="${0.45 + 0.55 * Math.min(1, (h.prob ?? 100) / 100)}"/>
+            ${h.rain >= 0.5 ? `<text x="${x(i)}" y="${202 - bh}" text-anchor="middle" font-size="8.5" font-weight="800" fill="#4C8DF6">${h.rain.toFixed(1)}</text>` : ''}`;
+  }).join('');
+  const labels = hs.map((h, i) => `<text x="${x(i)}" y="222" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--muted)">${shortHour(h.hour)}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Overnight wind speed and direction">
+    ${g}
+    <text x="${L}" y="11" font-size="9" fill="var(--muted)" font-weight="800">km/h</text>
+    <path d="${area}" fill="#4C8DF6" opacity=".10"/>
+    <path d="${gust}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 4" opacity=".8"/>
+    <path d="${line}" fill="none" stroke="#4C8DF6" stroke-width="2.5" stroke-linejoin="round"/>
+    ${arrows}
+    <text x="${W - R}" y="${Math.max(12, y(Math.max(...hs.map(h => h.gust))) - 4)}" text-anchor="end" font-size="9" fill="var(--muted)" font-weight="700">gusts</text>
+    ${hit}
+    <line x1="${L}" x2="${W - R}" y1="206" y2="206" stroke="var(--line)"/>
+    ${rain}
+    ${labels}
+  </svg>
+  <div class="sub" style="margin-top:4px">Coloured <b>N</b>/<b>S</b> tags show which bed is catching the wind that hour.</div>`;
+}
+
+// ---------- render ----------
+function render(){
+  if (!data) return;
+  let adv;
+  try { adv = buildAdvice(data, facing); }
+  catch (e) { $('#headline').textContent = 'Forecast is having a moment. Try again shortly.'; return; }
+  const n = adv.night;
+  $('#date').textContent = `${niceDate(n.date)} night · Womerah Lane`;
+  $('#headline').textContent = headline(adv);
+  renderBed('#bed-north', 'North bed', adv.north, facing.north, 'n');
+  renderBed('#bed-south', 'South bed', adv.south, facing.south, 's');
+
+  $('#tiles').innerHTML = `
+    <div class="tile">${icon(n.sky.icon)}<b>${n.sky.text}</b><span>overnight</span></div>
+    <div class="tile">${windIcon(n.endDeg)}<b>${n.startDir}→${n.endDir}</b><span>gusts ${n.peakGust}<br>at ${shortHour(n.peakGustHour)}</span></div>
+    <div class="tile">${icon('drop')}<b>${n.rainTotal} mm</b><span>${n.rainProb}% chance</span></div>
+    <div class="tile">${icon('thermo')}<b>${n.low}°</b><span>overnight low</span></div>`;
+  const ch = $('#change');
+  if (n.changeText) { ch.style.display = 'flex'; ch.innerHTML = `${icon('change')}<span>${n.changeText}</span>`; }
+  else ch.style.display = 'none';
+
+  $('#chart').innerHTML = chartSVG(adv);
+
+  const t = adv.tomorrow;
+  $('#tomorrow').innerHTML = t ? `
+    <h2 style="margin-bottom:10px">${t.day}</h2>
+    <div class="tmrw">${icon(t.icon)}
+      <div><div class="t">${t.max}° <small>/ ${t.min}°</small></div><p>${t.sentence}</p></div>
+    </div>` : '';
+}
+
+async function loadForecast(){
+  const b = $('#banner');
+  try {
+    data = await fetchForecast();
+    b.style.display = 'none';
+  } catch {
+    data = sampleForecast();
+    b.textContent = 'Couldn\'t reach the forecast, so this is sample weather. Pull to refresh.';
+    b.style.display = 'block';
+  }
+  render();
+}
+
+// ---------- settings ----------
+const DEFAULT_PEOPLE = [
+  { id:'mook', name:'Mook', email:'mooksimpson@gmail.com', time:'18:00', channel:'email' },
+  { id:'lea',  name:'Lea',  email:'lea.simpson@nas.edu.au', time:'18:00', channel:'email' },
+];
+const pin = () => local.pin || '';
+
+async function loadServer(){
+  try {
+    const r = await fetch('/api/settings', { headers: pin() ? { 'x-pin': pin() } : {} });
+    if (!r.ok) throw 0;
+    const j = await r.json();
+    server = { online: true, caps: j.caps || server.caps, settings: j.settings || null, locked: !!j.locked };
+    if (j.facing) { facing = { ...facing, ...j.facing }; render(); }
+  } catch { server.online = false; }
+}
+
+function settingsHTML(){
+  const s = server.settings || local.settings || {};
+  const people = s.people || DEFAULT_PEOPLE;
+  const personBlock = (p, i) => `
+    <fieldset data-i="${i}">
+      <legend>${p.name}'s email</legend>
+      <div class="row">
+        <div><label>Send it</label>
+          <div class="seg seg2" data-k="channel">
+            <button type="button" data-v="email" aria-pressed="${p.channel !== 'off'}">On</button>
+            <button type="button" data-v="off" aria-pressed="${p.channel === 'off'}">Off</button>
+          </div></div>
+        <div><label>At</label><input type="time" data-k="time" value="${p.time}"></div>
+      </div>
+      <label>Email</label><input type="email" data-k="email" value="${p.email}">
+      <div style="margin-top:10px"><button type="button" class="mini ghost" data-test="${p.id}">Send me a test now</button></div>
+    </fieldset>`;
+  const lockedNote = server.online && server.locked ? `<fieldset><legend>Household PIN</legend><div class="inl"><input type="password" id="pinIn" inputmode="numeric" placeholder="PIN"><button type="button" class="mini" id="unlock">Unlock</button></div><p class="note">Keeps random people off your alert settings.</p></fieldset>` : '';
+  const offline = !server.online ? `<p class="note" style="margin:0 0 12px">Alerts aren't switched on yet (this page isn't running on Vercel). Window directions still save on this phone.</p>` : (!server.caps.kv ? `<p class="note" style="margin:0 0 12px">Add the free Upstash Redis store in Vercel to save alert changes. Until then you both get the email at 6pm.</p>` : '');
+  return `${offline}${lockedNote}
+    ${people.map(personBlock).join('')}
+    <fieldset>
+      <legend>Which way the windows face</legend>
+      <div class="row">
+        <div><label>North bed (°)</label><div class="inl"><input type="number" id="fN" min="0" max="359" value="${Math.round(facing.north)}"><button type="button" class="mini" data-measure="fN" aria-label="Measure with compass">🧭</button></div></div>
+        <div><label>South bed (°)</label><div class="inl"><input type="number" id="fS" min="0" max="359" value="${Math.round(facing.south)}"><button type="button" class="mini" data-measure="fS" aria-label="Measure with compass">🧭</button></div></div>
+      </div>
+      <p class="note">Tap 🧭 while standing at the window holding your phone flat, top edge pointing outside. 0° is north, 90° east.</p>
+    </fieldset>
+    <button type="button" class="save" id="saveBtn">Save</button>`;
+}
+
+function readForm(){
+  const people = [...document.querySelectorAll('fieldset[data-i]')].map((fs, i) => {
+    const base = ((server.settings || local.settings || {}).people || DEFAULT_PEOPLE)[i];
+    return {
+      ...base,
+      channel: fs.querySelector('[data-k="channel"] [aria-pressed="true"]')?.dataset.v === 'off' ? 'off' : 'email',
+      time: fs.querySelector('[data-k="time"]').value || '18:00',
+      email: fs.querySelector('[data-k="email"]').value.trim(),
+    };
+  });
+  const f = { north: +$('#fN').value % 360, south: +$('#fS').value % 360 };
+  return { people, facing: f };
+}
+
+async function measure(inputId, btn){
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
+      const p = await DeviceOrientationEvent.requestPermission();
+      if (p !== 'granted') throw new Error('denied');
+    }
+  } catch { toast('Compass permission needed'); return; }
+  btn.textContent = '…';
+  const reads = [];
+  const handler = e => {
+    let h = e.webkitCompassHeading;
+    if (h == null && e.absolute && e.alpha != null) h = (360 - e.alpha) % 360;
+    if (h != null) reads.push(h);
+  };
+  const evt = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
+  window.addEventListener(evt, handler);
+  await new Promise(r => setTimeout(r, 1500));
+  window.removeEventListener(evt, handler);
+  btn.textContent = '🧭';
+  if (!reads.length) { toast('No compass on this device'); return; }
+  const s = reads.reduce((a, d) => [a[0] + Math.sin(d * Math.PI / 180), a[1] + Math.cos(d * Math.PI / 180)], [0, 0]);
+  const deg = (Math.atan2(s[0], s[1]) * 180 / Math.PI + 360) % 360;
+  $('#' + inputId).value = Math.round(deg);
+  toast(`Got it: ${Math.round(deg)}° (${compass16(deg)})`);
+}
+
+function wireSettings(){
+  const body = $('#settingsBody');
+  body.innerHTML = settingsHTML();
+  body.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || b.disabled) return;
+    seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  }));
+  body.querySelectorAll('[data-measure]').forEach(b => b.addEventListener('click', () => measure(b.dataset.measure, b)));
+  $('#unlock')?.addEventListener('click', async () => {
+    local.pin = $('#pinIn').value; store.set(local);
+    await loadServer();
+    if (server.locked) toast('Wrong PIN'); else { toast('Unlocked'); wireSettings(); }
+  });
+  body.querySelectorAll('[data-test]').forEach(b => b.addEventListener('click', async () => {
+    if (!server.online) return toast('Alerts work once it\'s on Vercel');
+    b.textContent = 'Sending…';
+    try {
+      const r = await fetch('/api/notify?test=' + b.dataset.test, { method: 'POST', headers: { 'x-pin': pin(), 'content-type': 'application/json' }, body: JSON.stringify(readForm()) });
+      const j = await r.json();
+      toast(r.ok ? 'Sent! Check your inbox' : (j.error || 'Didn\'t send'));
+    } catch { toast('Didn\'t send'); }
+    b.textContent = 'Send me a test now';
+  }));
+  $('#saveBtn').addEventListener('click', async () => {
+    const v = readForm();
+    facing = v.facing; local.facing = v.facing; local.settings = { people: v.people }; store.set(local);
+    render();
+    if (server.online && server.caps.kv) {
+      const r = await fetch('/api/settings', { method: 'POST', headers: { 'content-type': 'application/json', 'x-pin': pin() }, body: JSON.stringify(v) }).catch(() => null);
+      if (r && r.ok) { server.settings = v; toast('Saved for both of you'); }
+      else toast(r && r.status === 401 ? 'PIN needed to save alerts' : 'Saved on this phone only');
+    } else toast('Saved');
+    $('#settings').close();
+  });
+}
+
+$('#openSettings').addEventListener('click', async () => {
+  await loadServer();
+  wireSettings();
+  $('#settings').showModal();
+});
+
+// ---------- go ----------
+loadServer().then(render);
+loadForecast();
+let lastLoad = Date.now();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && Date.now() - lastLoad > 20 * 60 * 1000) { lastLoad = Date.now(); loadForecast(); }
+});
+</script>
+</body>
+</html>
